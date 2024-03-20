@@ -190,6 +190,6 @@ class BIDSio(object):
 
         
 
-        D = self.BIDS.get(extension='nii.gz', space=space, task=task, suffix=suffix, return_type='filename')
+        D = self.BIDS.get(task=task, space=space, suffix=suffix, extension='nii.gz', return_type='filename')
 
         return D
