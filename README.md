@@ -6,9 +6,14 @@ Modular code for Will Decker's Honors Thesis (2024)
 
 1. [Installation](#installation)
 2. [Usage](#usage)
-3. [`decker.utils.io.io`](#deckerutilsioio)
-4. [`decker.analysis.utils.utils`](#deckeranalysisutilsutils)
-5. [`decker.analysis.behavioral.scoring`](#deckeranalysisbehvarioralscoring)
+
+   2a. [`decker.utils.io.io`](#deckerutilsioio)
+
+   2b. [`decker.analysis.utils.utils`](#deckeranalysisutilsutils)
+
+   2c. [`decker.analysis.behavioral.scoring`](#deckeranalysisbehvarioralscoring)
+
+3. [Contributing](#contributing)
 
 # Installation
 
@@ -230,3 +235,9 @@ stats.compute(test='ind')
 ```
 
 > See docstring for more information and optional keyword parameters.
+
+# Contributing
+
+If you wish to contribute to this code, please submit a pull request to the main branch with adequeate descriptions of the requested/intended changes.
+
+Please email [deckerwill7@gmail.com](mailto:deckerwill7@gmail.com) with any additional questions.
