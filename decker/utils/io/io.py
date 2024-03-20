@@ -188,8 +188,11 @@ class BIDSio(object):
         else:
             task = kwargs.get('task')
 
-        
+        if kwargs.get("space") is None:
+            space = "MNI152NLin2009cAsym"
+        else:
+            space = kwargs.get("space")
 
-        D = self.BIDS.get(task=task, space=space, suffix=suffix, extension='nii.gz', return_type='filename')
+        D = self.BIDS.get(task=task, space=space, suffix="bold", extension=".nii.gz", return_type='filename')
 
         return D
