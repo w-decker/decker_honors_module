@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="decker",
-    version="1.0.0",
+    version="1.0.1",
     author="Will Decker",
     author_email="deckerwill7@gmail.com",
     description="Modularized code for Will Decker's Honors Thesis",
@@ -15,7 +15,7 @@ setup(
         "Intended Audience :: Science/Research",
         "Topic :: Scientific/Engineering"
     ],
-    python_requires='>=3.8',
+    python_requires='>=3.6',
     install_requires=['nilearn', 
                       'matplotlib',
                       'numpy']

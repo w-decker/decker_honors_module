@@ -6,8 +6,19 @@ import pandas as pd
 import urllib.request
 import shutil
 import numpy as np
-import deepdish as dd
 from pathlib import Path
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)  # Set the logging level as desired
+
+# Attempt to import deepdish
+try:
+    import deepdish as dd
+    DEEPDISH_IMPORTED = True
+except ModuleNotFoundError:
+    logging.warning("deepdish is not installed. Some functionalities may not be available.")
+
 
 def download_sherlock(out_dir: Path):
     """Download sherlock dataset"""
