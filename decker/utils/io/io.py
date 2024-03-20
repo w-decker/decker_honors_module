@@ -170,7 +170,7 @@ class BIDSio(object):
 
         return D
 
-    def get_func(self, suffix: str, **kwargs):
+    def get_func(self, space: str, suffix: str, **kwargs):
         """Acquires all functional derivatives datafiles.
         Expects that you have processed with fMRIPrep with --level full as it will search for ...desc-preproc_bold.nii.gz
 
@@ -188,6 +188,8 @@ class BIDSio(object):
         else:
             task = kwargs.get('task')
 
-        D = self.BIDS.get(scope='derivatives', extension='nii.gz', task=task, suffix=suffix, return_type='filename')
+        
+
+        D = self.BIDS.get(extension='nii.gz', space=space, task=task, suffix=suffix, return_type='filename')
 
         return D
