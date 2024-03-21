@@ -170,7 +170,7 @@ class BIDSio(object):
 
         return D
 
-    def get_func(self, space: str, suffix: str, **kwargs):
+    def get_func(self, suffix: str, **kwargs):
         """Acquires all functional derivatives datafiles.
         Expects that you have processed with fMRIPrep with --level full as it will search for ...desc-preproc_bold.nii.gz
 
