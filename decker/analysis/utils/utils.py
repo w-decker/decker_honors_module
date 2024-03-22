@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import nibabel as nib
 from decker.utils.io.io import get_subid
+import os
 
 def nilearn_mask_single_data(atlas: str, file: str, report:bool=False, plot:bool=False):
     """Mask an fMRI data using Harvard-Oxford probabilistic atlas
@@ -154,3 +155,40 @@ def stack_data(data: "list[str]", group=False, **kwargs) -> "dict[str, np.ndarra
         stacked = d
 
     return stacked
+
+def mask(data: str, mask: str, output_dir: str) -> "dict[np.ndarray, nib.nifti1.Nifti1Image]":
+    """Mask a subject's functional scan with subject's T1w mask
+    
+    Parameters
+    ----------
+    data: str
+        Path to functional data in nii.gz format
+        
+    mask: str
+        Path to mask
+        
+    output_dir: str
+        Path (with intended filename) to output directory to save the masked data
+        
+    Return
+    ------
+    data: dict[np.ndarray, nib.nifti1.Nifti1Image]
+        Returns a dict with the data as a numpy.ndarray and Nifti image"""
+
+    # assert a few things
+    assert data.endswith(".nii.gz")
+    assert data.endswith(".nii.gz")
+    assert os.path.exists(output_dir)
+
+    # load in the data
+    _data = nib.load(data).get_fdata()
+    _mask = nib.load(mask).get_fdata()
+
+    # mask data
+    mask_data = np.multiply(_data, _mask)  
+
+    # save
+    out = nib.nifti1.Nifti1Image(mask_data, affine=mask_data.affine, header=mask_data.header)
+    nib.save(out, output_dir)
+
+    return {"numpy": mask_data, "Nifti": out}
