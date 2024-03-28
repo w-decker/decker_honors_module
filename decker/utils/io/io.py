@@ -95,6 +95,27 @@ def parse_pdb(path:str, subid_col: str, cond_col: str) -> dict:
     
     return grouped
 
+def parse_files(files:"list[str]", conditionals:"list[str]") -> "list[str]":
+    """Parse a list based on a condition present in the list
+    
+    E.g. if '<some string>' is in list, group this list
+    
+    Parameters
+    ----------
+    files: list[str]
+        List of files
+        
+    conditional: list[str]
+
+    Return
+    ------
+    out: list[str]
+        Parsed list
+        """
+    out = [i for i in files for j in conditionals if j in i]
+    
+    return out
+
 def get_subid(path: str) -> str:
     """Extract the subject ID from a full BIDS file path to a func file in derivatives folder
     
