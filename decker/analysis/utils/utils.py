@@ -5,6 +5,7 @@ import numpy as np
 import nibabel as nib
 from decker.utils.io.io import get_subid
 import os
+from pathlib import Path
 
 def nilearn_mask_single_data(atlas: str, file: str, report:bool=False, plot:bool=False):
     """Mask an fMRI data using Harvard-Oxford probabilistic atlas
@@ -156,13 +157,13 @@ def stack_data(data: "list[str]", group=False, **kwargs) -> "dict[str, np.ndarra
 
     return stacked
 
-def mask(data: str, mask: str, output_dir: str) -> "dict[np.ndarray, nib.nifti1.Nifti1Image]":
-    """Mask a subject's functional scan with subject's T1w mask
+def mask_anat(data: str, mask: str, output_dir: str) -> "dict[np.ndarray, nib.nifti1.Nifti1Image]":
+    """Mask a subject's anatomical scan with subject's T1w mask
     
     Parameters
     ----------
     data: str
-        Path to functional data in nii.gz format
+        Path to anatomical data in nii.gz format
         
     mask: str
         Path to mask
@@ -192,3 +193,46 @@ def mask(data: str, mask: str, output_dir: str) -> "dict[np.ndarray, nib.nifti1.
     nib.save(out, output_dir)
 
     return {"numpy": mask_data, "Nifti": out}
+
+def export(data, filename:str, output_path:str = Path.cwd(), verbose:bool=False):
+    """Export data
+    
+    Description
+    -----------
+    Converts data into an a priori specified format (nifti or binary numpy). 
+    If you are converting to nifti format, then you may only create a single dataset. If you are converting to binary numpy, then you may export a stacked/grouped data of type np.ndarray or list[np.ndarray], dict[np.ndarray], etc. 
+
+    Parameters
+    ----------
+    data:
+        Can be a dictionary or numpy array of data
+
+    filename: str
+        Name to export, with extension ['.nii.gz' or '.npy']
+
+    output_path: str, default = pathlib.Path.cwd()
+        Where do you want to save the files?
+
+    verbose: bool
+        Display where files are output
+    """
+
+    # just to make sure
+    assert filename.endswith('.nii.gz') or filename.endswith('.npy')
+
+    if filename.endswith('.nii.gz'):
+        img = nib.nifti1.Nifti1Image(data, affine=None)
+        nib.save(img, os.path.join(output_path, filename))
+        
+        # assure
+        if verbose is True:
+            print(f'{filename} saved to {output_path} in nifti format.')
+
+    elif filename.endswith('.npy'):
+        np.save(os.path.join(output_path, filename), data)
+
+        # assure
+        if verbose is True:
+            print(f'{filename} saved to {output_path} in numpy binary format.')
+
+
