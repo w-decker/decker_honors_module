@@ -1,6 +1,8 @@
 # decker_honors_module
 
-Modular code for Will Decker's Honors Thesis (2024)
+Modular code for Will Decker's Honors Thesis (2024).
+
+Real examples of deployment can be be found in the [analysis capsule](https://github.com/w-decker/Honors-Thesis) for this project.
 
 # Table of Contents
 
@@ -31,12 +33,19 @@ And install the module
 pip install .
 ```
 
+To update the module
+
+```bash
+git pull origin main
+pip install . --upgrade
+```
+
 # Usage
 
 This code is broken down into a few submodules
 
 ```bash
-.
+decker
 ├── analysis
 │   ├── behavioral
 │   ├── eventseg
