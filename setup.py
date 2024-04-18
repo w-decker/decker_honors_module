@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="decker",
-    version="1.2.4",
+    version="2.0.0",
     author="Will Decker",
     author_email="deckerwill7@gmail.com",
     description="Modularized code for Will Decker's Honors Thesis",
