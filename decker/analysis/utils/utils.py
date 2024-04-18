@@ -6,8 +6,10 @@ import nibabel as nib
 from decker.utils.io.io import get_subid
 import os
 from pathlib import Path
+from nilearn.interfaces.fmriprep import load_confounds_strategy
 
-def nilearn_mask_single_data(atlas: str, file: str, report:bool=False, plot:bool=False):
+
+def nilearn_mask_single_data(atlas: str, file: str, report:bool=False, plot:bool=False, confounds:bool=False):
     """Mask an fMRI data using Harvard-Oxford probabilistic atlas
     
     Parameters
@@ -44,7 +46,18 @@ def nilearn_mask_single_data(atlas: str, file: str, report:bool=False, plot:bool
         report = None
 
     # mask to data
-    data = masker.transform(file)
+    if confounds:
+
+        # get confounds
+        confounds, _ = load_confounds_strategy(
+        file, denoise_strategy="simple", motion="basic")
+
+        # mask
+        data = masker.fit_transform(file, confounds=confounds)
+    else:
+        
+        # mask
+        data = masker.fit(file)
 
     # plot for people to view
     if plot is True:
@@ -56,7 +69,7 @@ def nilearn_mask_single_data(atlas: str, file: str, report:bool=False, plot:bool
 
     return data, atlas.labels, report
 
-def nilearn_mask_group_by_condition(cond, atlas:str, files:"list[str]") -> "dict[str, np.ndarray]":
+def nilearn_mask_group_by_condition(cond, atlas:str, files:"list[str]", confounds:bool=False) -> "dict[str, np.ndarray]":
     """Mask all data in a directory using Harvard-Oxford probabilistic atlas
     
     Parameters
@@ -87,7 +100,7 @@ def nilearn_mask_group_by_condition(cond, atlas:str, files:"list[str]") -> "dict
 
             # parse and and store
             if file_path:
-                roidat, _, _ = nilearn_mask_single_data(atlas=atlas, file=file_path[0])
+                roidat, _, _ = nilearn_mask_single_data(atlas=atlas, file=file_path[0], confounds=confounds)
                 condition_data.append(roidat)
                 print(f'Masking: {get_subid(file_path[0])} and adding to group: {condition} \n')
 
@@ -235,4 +248,24 @@ def export(data, filename:str, output_path:str = Path.cwd(), verbose:bool=False)
         if verbose is True:
             print(f'{filename} saved to {output_path} in numpy binary format.')
 
+    
+def vectorize_matrices(data:np.ndarray) -> np.ndarray:
+    """Vectorize three dimensional data"""
+
+    # Make matrix a vector
+    return data.reshape(data.shape[0], -1)
+
+def devectorize_centers(cluster_centers, n_rois):
+    """Devectorize clusters from k-means algorithm"""
+
+    # Reshape cluster centers back into correlation matrices
+    return cluster_centers.reshape(cluster_centers.shape[0], n_rois, n_rois)
+
+def corr2cov(x:np.ndarray, axis:int=0) -> np.ndarray:
+    """Convert correlation matrix to covariance matrix"""
+
+    sigma = np.std(x, axis=axis)
+    covmat = x @ np.outer(sigma, sigma)
+
+    return covmat
 
